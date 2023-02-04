@@ -7,9 +7,11 @@ spring:
   data:
     redis:
       host: 106.12.137.140
+      #host: 127.0.0.1
       port: 6379
       # Redis服务器连接密码（默认为空）,无密码需注释，可能报错ERR Client sent AUTH, but no password is set
       password: BSG#164198bsg
+      #password:
       jedis:
         pool:
           #连接池中的最小空闲连接

@@ -5,10 +5,14 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -104,5 +108,17 @@ public class RedisUtil {
      */
     public static<T> T getForObject(String key){
         return (T)redisTemplate.opsForValue().get(key);
+    }
+
+    public static<T> List<T> multiGet(Collection<String> keyList){
+        return (List<T>)redisTemplate.opsForValue().multiGet(keyList);
+    }
+
+    public static<T> List<T> multiGetUsePipeline(Collection<String> keyList){
+        return (List<T>)redisTemplate.executePipelined((RedisCallback<Object>) redisConnection->{
+            keyList.forEach(item->redisConnection.stringCommands().get(item.getBytes()));
+            //keyList.forEach(item->redisConnection.get(item.getBytes()));
+            return null;
+        });
     }
 }
