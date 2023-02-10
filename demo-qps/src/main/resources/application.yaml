@@ -1,2 +1,15 @@
 server:
   port: 8081
+
+spring:
+  application:
+    name: demo-qps
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
