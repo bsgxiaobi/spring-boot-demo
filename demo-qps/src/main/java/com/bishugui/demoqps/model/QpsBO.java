@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 
 /**
  * @author bi shugui
@@ -15,31 +17,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class QpsBO implements Comparable<QpsBO> {
+public class QpsBO {
     /**
-     * 到期时间 秒
+     * 请求总数
      */
-    private Long expireSecond;
+    private AtomicLong count;
+
+    /**
+     * 上一次总数
+     */
+    private Long lastCount;
+
+    /**
+     * qps,prometheus的Gauge指标
+     */
+    private AtomicLong qps;
+
+    /**
+     * 上一次时间
+     */
+    private Long lastTime;
 
     /**
      * 路径
      */
     private String apiPath;
-
-    /**
-     * 缓存中的key
-     */
-    private String key;
-
-
-    /**
-     * 排序
-     * @param o the object to be compared.
-     * @return 从小到大排序
-     */
-    @Override
-    public int compareTo(QpsBO o) {
-        long dif = this.expireSecond - o.expireSecond;
-        return dif > 0 ? 1 : (dif < 0 ? -1 : 0);
-    }
 }

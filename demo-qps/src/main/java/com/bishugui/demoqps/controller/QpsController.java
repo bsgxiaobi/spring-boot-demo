@@ -13,11 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/qps")
 public class QpsController {
-    @GetMapping("/current-qps-cache-count")
-    public Integer currentQpsCacheCount(){
-        return QpsInterceptor.getQpsCacheCount();
-    }
-
 
     @GetMapping("/test1")
     public void testQps1(){
