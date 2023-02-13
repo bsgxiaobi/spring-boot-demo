@@ -32,5 +32,13 @@ RedisMessageListenerContainer充当消息侦听器容器。它用于接收来自
 
 #### stream
 
+### 2 批量获取数据for、multiGet、管道Pipeline的性能对比
+具体代码：DemoRedisApplicationTests::testMultiGetAndPipeline()
+
+具体文档：demo-redis/readme.md
+
+### 3 批量获取数据for、multiSet、管道Pipeline的性能对比
+具体代码：DemoRedisApplicationTests::testMultiSetAndPipeline()
 ## demo-qps
 接口qps统计
+统计每个接口和总接口的qps，并将指标写入prometheus
