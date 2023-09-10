@@ -2,10 +2,13 @@
 spring-boot下各种中间件、功能实现的demo
 
 # 各Module介绍
-## demo-mongodb
+## 1 demo-mongodb
 mongodb增删改查
 
-## demo-redis
+## 2 demo-qps
+接口qps统计
+
+## 3 demo-redis
 redis相关demo
 ### 1 redis消息队列
 #### publish/subscribe 操作
@@ -42,3 +45,6 @@ RedisMessageListenerContainer充当消息侦听器容器。它用于接收来自
 ## demo-qps
 接口qps统计
 统计每个接口和总接口的qps，并将指标写入prometheus
+
+## demo-websocket-netty
+使用netty实现高性能websocket

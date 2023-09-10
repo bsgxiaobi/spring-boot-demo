@@ -1,0 +1,11 @@
+server:
+  port: 8084
+
+# websocket配置
+websocket-config:
+  # 端口
+  port: 9001
+  # 路径
+  path: /channel
+  # 最大帧大小
+  max-frame-size: 65535
