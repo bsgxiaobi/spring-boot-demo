@@ -1,5 +1,6 @@
 package com.bishugui.websocketNetty;
 
+import cn.hutool.core.thread.ThreadUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -42,30 +43,34 @@ public class WebSocketNettyServer implements DisposableBean {
 
     @PostConstruct
     public void start(){
-        bossGroup = new NioEventLoopGroup();
-        workGroup = new NioEventLoopGroup();
-        // 创建启动助手
-        ServerBootstrap serverBootstrap = new ServerBootstrap();
-        serverBootstrap.group(bossGroup,workGroup)
-                .channel(NioServerSocketChannel.class)
-                .handler(new LoggingHandler())
-                .localAddress(websocketPort)
-                .childHandler(webSocketChannelInit)
-                .childOption(ChannelOption.SO_KEEPALIVE,true);
+        // 必须使用新线程启动，否则主线程将一直被阻塞，现象：所有接口均不能访问
+        ThreadUtil.execAsync(()->{
+            bossGroup = new NioEventLoopGroup();
+            workGroup = new NioEventLoopGroup();
+            // 创建启动助手
+            ServerBootstrap serverBootstrap = new ServerBootstrap();
+            serverBootstrap.group(bossGroup,workGroup)
+                    .channel(NioServerSocketChannel.class)
+                    .handler(new LoggingHandler())
+                    .localAddress(websocketPort)
+                    .childHandler(webSocketChannelInit)
+                    .childOption(ChannelOption.SO_KEEPALIVE,true);
 
-        try {
-            // 改为同步操作，否则无法获取到Future对象，会报错
-            ChannelFuture sync = serverBootstrap.bind().sync();
-            log.info("websocket netty 服务启动成功");
-            // 作用：阻塞main函数继续往下执行，防止finally的语句块被触发
-            ChannelFuture channelFuture = sync.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }finally {
-            //优雅停机
-            bossGroup.shutdownGracefully();
-            workGroup.shutdownGracefully();
-        }
+            try {
+                // 改为同步操作，否则无法获取到Future对象，会报错
+                ChannelFuture sync = serverBootstrap.bind().sync();
+                log.info("websocket netty 服务启动成功");
+                // 作用：阻塞main函数继续往下执行，防止finally的语句块被触发
+                ChannelFuture channelFuture = sync.channel().closeFuture().sync();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }finally {
+                //优雅停机
+                bossGroup.shutdownGracefully();
+                workGroup.shutdownGracefully();
+            }
+        },true);
+
     }
 
     @Override

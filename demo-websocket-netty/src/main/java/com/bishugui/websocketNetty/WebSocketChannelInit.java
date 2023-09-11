@@ -5,9 +5,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import jakarta.annotation.Resource;
@@ -51,6 +54,12 @@ public class WebSocketChannelInit extends ChannelInitializer<SocketChannel> {
         // 对客户端，如果在60秒内没有向服务端发送心跳，就主动断开
         socketChannel.pipeline().addLast(new IdleStateHandler(600, 0, 0));
 
+
+        // 添加字符编码
+        socketChannel.pipeline().addLast(new StringEncoder());
+        socketChannel.pipeline().addLast(new StringDecoder());
+        // 添加字节数组编码
+        socketChannel.pipeline().addLast(new ByteArrayEncoder());
         // 通道入站处理程序适配器
         socketChannel.pipeline().addLast(new ChannelInboundHandlerAdapter(){
             @Override
