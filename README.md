@@ -48,3 +48,6 @@ RedisMessageListenerContainer充当消息侦听器容器。它用于接收来自
 
 ## demo-websocket-netty
 使用netty实现高性能websocket
+
+## tomcat-virtual-thread
+jdk21 虚拟线程 tomcat执行线程池使用virtual-thread
