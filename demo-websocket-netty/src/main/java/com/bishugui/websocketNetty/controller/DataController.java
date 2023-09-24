@@ -26,16 +26,17 @@ public class DataController {
     @GetMapping("/info")
     public Mono<WebsocketPanel> getInfo(){
         WebsocketPanel websocketPanel = new WebsocketPanel();
-        websocketPanel.setUserChannelCount(WebSocketNettyMessageHandler.getUserChannelMap().size());
-        long size = RamUsageEstimator.sizeOfMap(WebSocketNettyMessageHandler.getUserChannelMap());
-        websocketPanel.setUserChannelMemory(String.valueOf(size) + "字节");
-        long groupChannelSize = RamUsageEstimator.sizeOfMap(WebSocketNettyMessageHandler.getGroupChannelMap());
-        websocketPanel.setGroupChannelMemory(String.valueOf(groupChannelSize) + "字节");
-        Map<String,Integer> groupChannelCountMap = new HashMap<>(WebSocketNettyMessageHandler.getGroupChannelMap().size());
-        for (Map.Entry<String, ChannelGroup> channelGroupEntry : WebSocketNettyMessageHandler.getGroupChannelMap().entrySet()) {
-            groupChannelCountMap.put(channelGroupEntry.getKey(),channelGroupEntry.getValue().size());
-        }
-        websocketPanel.setGroupChannelCount(groupChannelCountMap);
+        websocketPanel.setUserChannelCount(WebSocketNettyMessageHandler.USER_ID_CHANNEL_MAP.size());
+        //websocketPanel.setUserChannelMemory(RamUsageEstimator.humanSizeOf(WebSocketNettyMessageHandler.getUserChannelMap()));
+        //long size = RamUsageEstimator.sizeOfMap(WebSocketNettyMessageHandler.getUserChannelMap());
+        //websocketPanel.setUserChannelMemory(String.valueOf(size) + "字节");
+        //long groupChannelSize = RamUsageEstimator.sizeOfMap(WebSocketNettyMessageHandler.getGroupChannelMap());
+        //websocketPanel.setGroupChannelMemory(String.valueOf(groupChannelSize) + "字节");
+        //Map<String,Integer> groupChannelCountMap = new HashMap<>(WebSocketNettyMessageHandler.getGroupChannelMap().size());
+        //for (Map.Entry<String, ChannelGroup> channelGroupEntry : WebSocketNettyMessageHandler.getGroupChannelMap().entrySet()) {
+        //    groupChannelCountMap.put(channelGroupEntry.getKey(),channelGroupEntry.getValue().size());
+        //}
+        //websocketPanel.setGroupChannelCount(groupChannelCountMap);
         return Mono.just(websocketPanel);
     }
 

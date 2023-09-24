@@ -44,6 +44,10 @@ public class WebSocketChannelInit extends ChannelInitializer<SocketChannel> {
         //post请求分三部分. request line / request header / message body
         // HttpObjectAggregator将多个信息转化成单一的request或者response对象
         socketChannel.pipeline().addLast(new HttpObjectAggregator(65535));
+
+        // 添加处理器
+        socketChannel.pipeline().addLast(webSocketNettyMessageHandler);
+
         // 将http协议升级为ws协议. websocket的支持
         //socketChannel.pipeline().addLast(new WebSocketServerProtocolHandler(websocketPath));
         socketChannel.pipeline().addLast(new WebSocketServerProtocolHandler(websocketPath,null,true,maxFrameSize));
@@ -53,7 +57,6 @@ public class WebSocketChannelInit extends ChannelInitializer<SocketChannel> {
 
         // 对客户端，如果在60秒内没有向服务端发送心跳，就主动断开
         socketChannel.pipeline().addLast(new IdleStateHandler(600, 0, 0));
-
 
         // 添加字符编码
         socketChannel.pipeline().addLast(new StringEncoder());
@@ -76,7 +79,5 @@ public class WebSocketChannelInit extends ChannelInitializer<SocketChannel> {
                 super.channelRead(ctx, msg);
             }
         });
-        // 添加处理器
-        socketChannel.pipeline().addLast(webSocketNettyMessageHandler);
     }
 }
