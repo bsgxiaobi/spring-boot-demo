@@ -60,3 +60,4 @@ build/
 /mvnw.cmd
 /logs/
 **/.mvn/
+out
